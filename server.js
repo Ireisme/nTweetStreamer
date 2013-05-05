@@ -1,8 +1,8 @@
 var express = require('express');
 var _ = require('underscore');
 
-var repository = require('./data/repository.js');
-var streamController = require('./streamController.js');
+var repository = require('./lib/data/repository.js');
+var streamController = require('./lib/streamController.js');
 
 var app = express();
 app.use(express.bodyParser());
