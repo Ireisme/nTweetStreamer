@@ -12,7 +12,7 @@ app.post('/streams', function(req, res){
 	var stream = req.body;
 	if(stream)
 	{
-		var toReturn = repository.saveStream(stream, function(data) {
+		repository.saveStream(stream, function(data) {
 			res.send(data);
 		});
 	}
@@ -21,7 +21,7 @@ app.post('/streams', function(req, res){
 app.get('/streams/:id', function(req, res){
 	if(req.params.id)
 	{
-		var toReturn = repository.findStream(req.params.id, function(data) {
+		repository.findStream(req.params.id, function(data) {
 			res.send(data);
 		});
 	}
@@ -51,7 +51,7 @@ app.post('/streamcontrol/:action/:id', function(req, res){
 //Tweets
 //
 app.get('/tweets/:id', function(req, res){
-	if(req.params.id !== null)
+	if(req.params.id)
 		repository.getTweets(req.params.id, function(data) {
 			res.send(data);
 		});
