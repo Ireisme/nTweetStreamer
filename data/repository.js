@@ -76,7 +76,7 @@ repository.saveTweet = function(collection, tweet, callback){
 	MongoClient.connect(mongoUrl, function(err, db){
 		if(err) { return console.log(err); }
 		var tweets = db.collection(collection);
-		tweets.insert({'tweet':tweet.text}, function (err, inserted) {
+		tweets.insert({'tweet':tweet}, function (err, inserted) {
 		});
 
 		if(callback)

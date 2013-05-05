@@ -13,12 +13,12 @@ function runStream(stream){
 		access_token_secret: credentials.access_token_secret
 	});
 
-	t.stream('statuses/filter', { track: stream.query }, function(tweetStream) {
+	t.stream('statuses/filter', stream.query, function(tweetStream) {
 		tweetStream.on('data', function(tweet){
 			if(running)
 			{
 				console.log('Found tweet: ' + stream._id);
-				repository.saveTweet(stream._id, { 'tweet':tweet.text });
+				repository.saveTweet(stream._id, tweet);
 			}
 			else
 				tweetStream.close();
