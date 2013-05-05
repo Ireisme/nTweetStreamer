@@ -17,6 +17,20 @@ repository.saveStream = function(stream, callback){
 	});
 };
 
+//Get All Streams
+repository.getAllStreams = function(callback){
+	MongoClient.connect(mongoUrl, function(err, db)
+	{
+		if(err) { return console.log(err); }
+		var collection = db.collection('streams');
+
+		collection.find().toArray(function(err, results){
+			if(callback)
+				callback(results);
+		});
+	});
+};
+
 //Find Streams
 repository.findStream = function(id, callback){
 	MongoClient.connect(mongoUrl, function(err, db) {

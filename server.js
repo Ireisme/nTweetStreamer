@@ -12,6 +12,7 @@ app.post('/streams', function(req, res){
 	var stream = req.body;
 	if(stream)
 	{
+		console.log(stream);
 		repository.saveStream(stream, function(data) {
 			res.send(data);
 		});
@@ -25,6 +26,12 @@ app.get('/streams/:id', function(req, res){
 			res.send(data);
 		});
 	}
+});
+
+app.get('/streams', function(req, res){
+	repository.getAllStreams(function(data) {
+		res.send(data);
+	});
 });
 
 app.delete('/streams/:id', function(req, res){
