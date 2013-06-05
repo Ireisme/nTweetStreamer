@@ -1,0 +1,8 @@
+<p>STREAMS BRO</p>
+
+<accordion close-others="true">
+  <accordion-group heading="{{stream._id}}" ng-repeat="stream in streams">
+    <p>{{stream.tweetCount}}</p>
+    <p>{{stream.query}}</p>
+  </accordion-group>
+</accordion>

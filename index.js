@@ -1,11 +1,19 @@
 var express = require('express');
 var _ = require('underscore');
+var static = require('node-static');
 
 var repository = require('./lib/data/repository.js');
 var streamController = require('./lib/streamController.js');
 
 var app = express();
 app.use(express.bodyParser());
+
+//Angular serving
+var fileServer = new static.Server('./ang/app/');
+
+require('http').createServer(function (request, response) {
+	fileServer.serve(request, response);
+}).listen(8088);
 
 //Streams
 app.post('/streams', function(req, res){
