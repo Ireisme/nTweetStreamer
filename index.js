@@ -37,8 +37,18 @@ app.get('/streams/:id', function(req, res){
 });
 
 app.get('/streams', function(req, res){
-	repository.getAllStreams(function(data) {
-		res.send(data);
+	repository.getAllStreams(function(streams) {
+		var send = _.after(streams.length, function(){
+			res.send(streams);
+		});
+
+		streams.forEach(function(s){
+			repository.getTweetCount(s._id, function(count){
+				s.tweetCount = count;
+				s.status = streamController.running(s._id) ? "Running" : "Stopped";
+				send();
+			});
+		});
 	});
 });
 
