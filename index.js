@@ -4,6 +4,7 @@ var static = require('node-static');
 
 var repository = require('./lib/data/repository.js');
 var streamController = require('./lib/streamController.js');
+var streamProcess = require('./lib/streamProcess.js');
 
 var app = express();
 app.use(express.bodyParser());
@@ -14,6 +15,20 @@ var fileServer = new static.Server('./ang/app/');
 require('http').createServer(function (request, response) {
 	fileServer.serve(request, response);
 }).listen(8088);
+
+app.all('/streams', function(req, res, next) {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+	res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
+	next();
+});
+
+app.all('/streamcontrol/:action/:id', function(req, res, next) {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+	res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
+	next();
+});
 
 //Streams
 app.post('/streams', function(req, res){
@@ -67,8 +82,10 @@ app.post('/streamcontrol/:action/:id', function(req, res){
 
 	if(req.params.action == 'start')
 		streamController.start(streamId);
-	else
+	else if(req.params.action == 'stop')
 		streamController.stop(streamId);
+	else
+		res.send("Unknown action.");
 
 	res.send("Ok");
 });
