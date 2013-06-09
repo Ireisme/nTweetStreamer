@@ -1,8 +1,44 @@
-<p>STREAMS BRO</p>
-
-<accordion close-others="true">
-  <accordion-group heading="{{stream._id}}" ng-repeat="stream in streams">
-    <p>{{stream.tweetCount}}</p>
-    <p>{{stream.query}}</p>
-  </accordion-group>
-</accordion>
+<div ng-controller="StreamsCtrl">
+  <p>STREAMS BRO</p>
+  <div>
+    <button ng-click="addStreamOpen()" class="btn">Add Stream</button>
+  </div>
+  <div modal="addStreamModal" close="addStreamCancel()">
+    <div class="modal-header">
+      Add Stream
+    </div>
+    <div class="modal-body">
+      <label>Stream name</label>
+      <input type="text" ng-model="addedStream._id" placeholder="Stream Name">
+      <label>Stream Type</label>
+      <input type="text" ng-model="addedStream.type" placeholder="Stream Type">
+      <label>Query</label>
+      <input type="text" ng-model="addedStream.query" placeholder="Query">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" ng-click="addStreamClose()">Add</button>
+      <button class="btn" ng-click="addStreamCancel()">Cancel</button>
+    </div>
+  </div>
+  <accordion close-others="true">
+    <accordion-group heading="{{stream._id}}" ng-repeat="stream in streams" ng-click="streamOpened(stream)">
+    <div>
+      <button class="btn btn-success" ng-click="streamAction(stream)">{{stream.action}}</button>
+    </div>
+      <table>
+        <tr>
+          <td>Query:</td>
+          <td>{{stream.query}}</td>
+        </tr>
+        <tr>
+          <td>Tweets:</td>
+          <td>{{stream.tweetCount}}</td>
+        </tr>
+        <tr>
+          <td>Status:</td>
+          <td>{{stream.status}}</td>
+        </tr>
+    </table>
+    </accordion-group>
+  </accordion>
+</div>
