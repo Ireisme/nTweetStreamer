@@ -15,29 +15,34 @@ function StreamsCtrl($scope, $http) {
 		}
 	];*/
 
+	$http.get('config.json').success(function(data){
+		$scope.uri = "http://" + data.serverAddress;
+		$scope.getStreams();
+	});
+
 	$scope.streamAction = function(stream){
 		if(stream.status === "Stopped")
 		{
-			$http.post("http://localhost:3000/streamcontrol/start/" + stream._id);
+			$http.post($scope.uri + "/streamcontrol/start/" + stream._id);
 			stream.status = "Running";
 			stream.action = "Stop";
 		}
 		else if(stream.status === "Running")
 		{
-			$http.post("http://localhost:3000/streamcontrol/stop/" + stream._id);
+			$http.post($scope.uri + "/streamcontrol/stop/" + stream._id);
 			stream.status = "Stopped";
 			stream.action = "Start";
 		}
 	};
 
 	$scope.getStreams = function(){
-		$http.get("http://localhost:3000/streams").success(function(data){
+		$http.get($scope.uri + "/streams").success(function(data){
 			$scope.streams = $scope.formatStreams(data);
 		});
 	};
 
 	$scope.addStream = function(stream){
-		$http.post("http://localhost:3000/streams", stream).success(function(data){
+		$http.post($scope.uri + "/streams", stream).success(function(data){
 			$scope.getStreams();
 		});
 	};
@@ -59,15 +64,17 @@ function StreamsCtrl($scope, $http) {
 	};
 
 	$scope.formatStreams = function(streams){
-		streams.forEach(function(stream){
-			if(stream.status === "Stopped")
-				stream.action = "Start";
-			else if(stream.status === "Running")
-				stream.action = "Stop";
-		});
+
+		if(streams)
+		{
+			streams.forEach(function(stream){
+				if(stream.status === "Stopped")
+					stream.action = "Start";
+				else if(stream.status === "Running")
+					stream.action = "Stop";
+			});
+		}
 
 		return streams;
 	};
-
-	$scope.getStreams();
 }
