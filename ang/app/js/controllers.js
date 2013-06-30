@@ -2,20 +2,8 @@
 
 /* Controllers */
 function StreamsCtrl($scope, $http) {
-/*	$scope.streams = [
-		{
-			_id: "First Stream",
-			query: "track: bottoms",
-			tweetCount: "800"
-		},
-		{
-			_id: "Second Stream",
-			query: "\"locations\": \"-122.75,36.8,-121.75,37.8\"",
-			tweetCount: "800"
-		}
-	];*/
 
-	$http.get('config.json').success(function(data){
+	$http.get('ang-config.json').success(function(data){
 		$scope.uri = "http://" + data.serverAddress;
 		$scope.getStreams();
 	});
