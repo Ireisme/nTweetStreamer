@@ -1,11 +1,16 @@
 'use strict';
 
 /* Controllers */
-function StreamsCtrl($scope, $http) {
+function SidebarCtrl($scope, $http){
+
+}
+
+function StreamsCtrl($scope, $timeout, $http) {
 
 	$http.get('ang-config.json').success(function(data){
 		$scope.uri = "http://" + data.serverAddress;
 		$scope.getStreams();
+		$timeout(reload, 5000);
 	});
 
 	$scope.streamAction = function(stream){
@@ -28,6 +33,33 @@ function StreamsCtrl($scope, $http) {
 			$scope.streams = $scope.formatStreams(data);
 		});
 	};
+
+	function reload() {
+		delete $http.defaults.headers.common['X-Requested-With'];
+		$http.get($scope.uri + "/streamcontrol/active/").success(function(data){
+			var streams = $scope.formatStreams(data);
+			streams.forEach(function(stream){
+				var scopeStream =
+					_.find($scope.streams, function(s){ return stream._id === s._id; });
+
+				if(scopeStream)
+				{
+					scopeStream.tweetCount = stream.tweetCount;
+					scopeStream.status = stream.status;
+					scopeStream.action = stream.action;
+				}
+				else
+				{
+					$scope.streams.push(stream);
+				}
+			});
+
+			$timeout(reload, 1000);
+		})
+		.error(function(data, status, headers, config){
+
+		});
+	}
 
 	$scope.addStream = function(stream){
 		$http.post($scope.uri + "/streams", stream).success(function(data){
