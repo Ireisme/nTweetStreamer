@@ -2,16 +2,7 @@
 	"folders":
 	[
 		{
-			"path": "ang"
-		},
-		{
-			"path": "config"
-		},
-		{
-			"path": "lib"
-		},
-		{
-			"path": "test"
+			"path": "../nTweetStreamer"
 		}
 	]
 }
