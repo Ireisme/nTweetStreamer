@@ -41,8 +41,22 @@ function StreamsCtrl($scope, $http) {
 	};
 
 	$scope.addStreamClose = function(){
-		$scope.addedStream.query = { track: $scope.addedStream.query };
-		$scope.addStream($scope.addedStream);
+		var stream = {};
+
+		stream._id = $scope.addedStream._id;
+		stream.type = $scope.addedStream.type;
+
+		if($scope.addedStream.type === "Track")
+			stream.query = { track: $scope.addedStream.query };
+		else if($scope.addedStream.type === "Location")
+			stream.query =
+				{ locations: $scope.addedStream.swLong + "," +
+					$scope.addedStream.swLat + "," +
+					$scope.addedStream.neLong + "," +
+					$scope.addedStream.neLat
+				};
+
+		$scope.addStream(stream);
 		$scope.addStreamModal = false;
 	};
 
