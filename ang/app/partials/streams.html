@@ -1,7 +1,7 @@
-<div ng-controller="StreamsCtrl" class="container-narrow" >
-  <p>STREAMS BRO</p>
+<div ng-controller="StreamsCtrl" class="span6" >
   <div>
-    <button ng-click="addStreamOpen()" class="btn">Add Stream</button>
+      <button ng-click="addStreamOpen()" class="btn pull-right">Add Stream</button>
+      <h3>Streams</h3>
   </div>
   <div modal="addStreamModal" close="addStreamCancel()">
     <div class="modal-header">
@@ -11,34 +11,65 @@
       <label>Stream name</label>
       <input type="text" ng-model="addedStream._id" placeholder="Stream Name">
       <label>Stream Type</label>
-      <input type="text" ng-model="addedStream.type" placeholder="Stream Type">
+      <select ng-model="addedStream.type">
+        <option>Track</option>
+        <option>Location</option>
+        <option>User</option>
+      </select>
       <label>Query</label>
-      <input type="text" ng-model="addedStream.query" placeholder="Query">
+      <div ng-switch on="addedStream.type">
+        <span ng-switch-when="Location">
+          <label>Northeast Corner</label>
+          <input type="text" ng-model="addedStream.neLong" placeholder="Longitude">
+          <input type="text" ng-model="addedStream.neLat" placeholder="Latitude">
+          <label>Southwest Corner</label>
+          <input type="text" ng-model="addedStream.swLong" placeholder="Longitude">
+          <input type="text" ng-model="addedStream.swLat" placeholder="Latitude">
+        </span>
+        <span ng-switch-default>
+          <input type="text" ng-model="addedStream.query" placeholder="Query">
+        </span>
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-primary" ng-click="addStreamClose()">Add</button>
       <button class="btn" ng-click="addStreamCancel()">Cancel</button>
     </div>
   </div>
-  <accordion close-others="true">
-    <accordion-group heading="{{stream._id}}" ng-repeat="stream in streams" ng-click="streamOpened(stream)">
-    <div>
-      <button class="btn btn-success" ng-click="streamAction(stream)">{{stream.action}}</button>
-    </div>
-      <table>
-        <tr>
-          <td>Query:</td>
-          <td>{{stream.query}}</td>
-        </tr>
-        <tr>
-          <td>Tweets:</td>
-          <td>{{stream.tweetCount}}</td>
-        </tr>
-        <tr>
-          <td>Status:</td>
-          <td>{{stream.status}}</td>
-        </tr>
-    </table>
-    </accordion-group>
-  </accordion>
+  <div>
+    <accordion close-others="true">
+      <accordion-group ng-repeat="stream in streams" ng-click="streamOpened(stream)">
+        <accordion-heading>
+        <div>
+          <span>{{stream._id}}</span>
+          <span ng-switch on="stream.type">
+            <span  ng-switch-when="Track">
+              <i class="icon-search"></i>
+            </span>
+            <span ng-switch-when="user">
+              <i class="icon-user"></i>
+            </span>
+            <span ng-switch-when="Location">
+              <i class="icon-globe"></i>
+            </span>
+          </span>
+          <span ng-switch on="stream.status">
+            <span class="pull-right" ng-switch-when="Running">
+              <i class="icon-play"></i>
+            </span>
+          </span>
+        </div>
+        </accordion-heading>
+      <div class="pull-right">
+        <button class="btn" ng-class="{true: 'btn-success', false:'btn-danger'}[stream.action == 'Start']" 
+          ng-click="streamAction(stream)">{{stream.action}}</button>
+      </div>
+      <div>
+        <p>Query: {{stream.query}}</p>
+        <p>Tweets: {{stream.tweetCount}}</p>
+        <p>Status: {{stream.status}}</p>
+      </div>
+      </accordion-group>
+    </accordion>
+  </div>
 </div>

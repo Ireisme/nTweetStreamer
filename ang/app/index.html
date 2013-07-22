@@ -12,6 +12,16 @@
   <link href="css/app.css" rel="stylesheet">
 </head>
 <body>
-  <div ng-view></div>
+	<div class="container">
+		<div class="row">
+			<div class="span 12">
+				<h1 class="text-center">nTweetStreamer</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div ng-include="'../partials/sidebar.html'"></div>
+	  	<div ng-view></div>
+		</div>
+	</div>
 </body>
 </html>
