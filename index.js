@@ -1,20 +1,20 @@
 var express = require('express');
 var _ = require('underscore');
 
-var app = express();
-app.use(express.bodyParser());
+var angularApp = express();
+angularServer = require('http').createServer(angularApp);
+var io = require('socket.io').listen(angularServer);
+angularApp.configure(function(){
+	angularApp.use(express.static(__dirname + '/public'));
+});
 
-require('./lib/routes/streams.js')(app);
-require('./lib/routes/tweets.js')(app);
+angularServer.listen(8088);
 
-app.listen(3000);
+var restApp = express();
+restApp.use(express.bodyParser());
 
-var static = require('node-static');
+require('./lib/routes/streams.js')(restApp, io);
+require('./lib/routes/tweets.js')(restApp, io);
 
-//Angular serving
-var fileServer = new static.Server('./ang/app/');
-
-require('http').createServer(function (request, response) {
-	fileServer.serve(request, response);
-}).listen(8088);
+restApp.listen(3000);
 

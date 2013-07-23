@@ -5,7 +5,7 @@
 var app = angular.module('nTweetStreamer', ['ui.bootstrap']);
 
 app.config(['$routeProvider', function($routeProvider) {
-	$routeProvider.when('/streams', {templateUrl: 'partials/streams.html', controller: StreamsCtrl});
+	$routeProvider.when('/streams', {templateUrl: 'partials/streams.html'});
 	$routeProvider.otherwise({redirectTo: '/streams'});
 }]);
 

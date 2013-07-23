@@ -5,12 +5,11 @@ function SidebarCtrl($scope, $http){
 
 }
 
-function StreamsCtrl($scope, $timeout, $http) {
+function StreamsCtrl($scope, $http, socket) {
 
 	$http.get('ang-config.json').success(function(data){
 		$scope.uri = "http://" + data.serverAddress;
 		$scope.getStreams();
-		$timeout(reload, 5000);
 	});
 
 	$scope.streamAction = function(stream){
@@ -34,32 +33,60 @@ function StreamsCtrl($scope, $timeout, $http) {
 		});
 	};
 
-	function reload() {
-		delete $http.defaults.headers.common['X-Requested-With'];
-		$http.get($scope.uri + "/streamcontrol/active/").success(function(data){
-			var streams = $scope.formatStreams(data);
-			streams.forEach(function(stream){
-				var scopeStream =
-					_.find($scope.streams, function(s){ return stream._id === s._id; });
+	socket.on('stream-start', function(streamId)
+	{
+		var scopeStream =
+			_.find($scope.streams, function(s){ return s._id === streamId.streamId; });
 
-				if(scopeStream)
-				{
-					scopeStream.tweetCount = stream.tweetCount;
-					scopeStream.status = stream.status;
-					scopeStream.action = stream.action;
-				}
-				else
-				{
-					$scope.streams.push(stream);
-				}
-			});
+		if(scopeStream)
+			scopeStream.status = 'Running';
+			scopeStream.action = "Stop";
+	});
 
-			$timeout(reload, 1000);
-		})
-		.error(function(data, status, headers, config){
+	socket.on('stream-stop', function(streamId)
+	{
+		var scopeStream =
+			_.find($scope.streams, function(s){ return s._id === streamId.streamId; });
 
-		});
-	}
+		if(scopeStream)
+			scopeStream.status = 'Stopped';
+			scopeStream.action = "Start";
+	});
+
+	socket.on('stream-tweet', function(streamId)
+	{
+		var scopeStream =
+			_.find($scope.streams, function(s){ return s._id === streamId.streamId; });
+
+		if(scopeStream)
+			scopeStream.tweetCount++;
+	});
+	// function reload() {
+	// 	delete $http.defaults.headers.common['X-Requested-With'];
+	// 	$http.get($scope.uri + "/streamcontrol/active/").success(function(data){
+	// 		var streams = $scope.formatStreams(data);
+	// 		streams.forEach(function(stream){
+	// 			var scopeStream =
+	// 				_.find($scope.streams, function(s){ return stream._id === s._id; });
+
+	// 			if(scopeStream)
+	// 			{
+	// 				scopeStream.tweetCount = stream.tweetCount;
+	// 				scopeStream.status = stream.status;
+	// 				scopeStream.action = stream.action;
+	// 			}
+	// 			else
+	// 			{
+	// 				$scope.streams.push(stream);
+	// 			}
+	// 		});
+
+	// 		$timeout(reload, 1000);
+	// 	})
+	// 	.error(function(data, status, headers, config){
+
+	// 	});
+	// }
 
 	$scope.addStream = function(stream){
 		$http.post($scope.uri + "/streams", stream).success(function(data){
