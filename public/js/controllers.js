@@ -1,8 +1,15 @@
 'use strict';
 
 /* Controllers */
+function SidebarCtrl($scope, $http, socket, streams){
 
-}
+    $http.get('ang-config.json').success(function(data){
+      var uri = "http://" + data.serverAddress;
+
+      $http.get(uri + "/streamcontrol/credentials").success(function(data){
+      	$scope.totalCredentials = data.count;
+      });
+    });
 
 	streams.getStreams(function(data){
 		$scope.usedCredentials = 
