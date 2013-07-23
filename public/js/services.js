@@ -24,3 +24,28 @@ app.factory('socket', function ($rootScope) {
     }
   };
 });
+
+app.factory('streams', function($http){
+  var uri;
+    return {
+      getStreams: function(callback){
+        $http.get('ang-config.json').success(function(config){
+          uri = "http://" + config.serverAddress;
+
+          $http.get(uri + "/streams").success(function(data){
+            if(callback)
+              callback(data);
+          });
+        });
+      },
+      addStream: function(stream, callback){
+        $http.get('ang-config.json').success(function(config){
+          uri = "http://" + config.serverAddress;
+          $http.post(uri + "/streams", stream).success(function(data){
+            if(callback)
+              callback(data);
+          });
+        });
+      }
+    };
+});
