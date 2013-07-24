@@ -77,6 +77,24 @@ function StreamsCtrl($scope, $http, socket, streams) {
 			scopeStream.action = "Start";
 	});
 
+	socket.on('stream-save', function(stream)
+	{
+		var scopeStream =
+			_.find($scope.streams, function(s){ return s._id === stream.streamId; });
+
+		if(scopeStream)
+			scopeStream = angular.copy(stream, scopeStream);
+		else
+		{
+			if(stream.status === "Stopped")
+				stream.action = "Start";
+			else if(stream.status === "Running")
+				stream.action = "Stop";
+
+			$scope.streams.push(stream);
+		}
+	});
+
 	socket.on('stream-tweet', function(streamId)
 	{
 		var scopeStream =
@@ -107,7 +125,7 @@ function StreamsCtrl($scope, $http, socket, streams) {
 					$scope.addedStream.neLat
 				};
 
-		$scope.addStream(stream);
+		streams.addStream(stream);
 		$scope.addStreamModal = false;
 	};
 
