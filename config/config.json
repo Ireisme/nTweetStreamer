@@ -1,3 +1,5 @@
 {
+  "serverPort": 3000,
+  "angularPort": 8088,
   "mongoUri": "mongodb://localhost:27017/tweets"
 }

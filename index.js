@@ -8,13 +8,22 @@ angularApp.configure(function(){
 	angularApp.use(express.static(__dirname + '/public'));
 });
 
-angularServer.listen(8088);
-
 var restApp = express();
 restApp.use(express.bodyParser());
 
 require('./lib/routes/streams.js')(restApp, io);
 require('./lib/routes/tweets.js')(restApp, io);
 
-restApp.listen(3000);
+var fs = require('fs'), config;
 
+fs.readFile('./config/config.json', function(err, data){
+  if(err)
+  {
+    console.log("Error Loading MongoConfig:" + err);
+    return;
+  }
+  config = JSON.parse(data);
+  
+  angularServer.listen(config.angularPort);
+  restApp.listen(config.serverPort);
+});
