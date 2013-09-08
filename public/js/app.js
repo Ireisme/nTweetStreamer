@@ -5,8 +5,15 @@
 var app = angular.module('nTweetStreamer', ['ui.bootstrap']);
 
 app.config(['$routeProvider', function($routeProvider) {
-	$routeProvider.when('/streams', {templateUrl: 'partials/streams.html'});
-	$routeProvider.otherwise({redirectTo: '/streams'});
+	$routeProvider.when('/', {
+    templateUrl: 'partials/main.html',
+      resolve:{
+      'streamData':function(streams){
+        return streams.promise;
+      }
+    }
+  })
+  $routeProvider.otherwise({redirectTo: '/'});;
 }]);
 
 app.config(['$httpProvider', function($httpProvider) {

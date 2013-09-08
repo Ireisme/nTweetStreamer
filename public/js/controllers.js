@@ -1,6 +1,9 @@
 'use strict';
 
 /* Controllers */
+function MainCtrl($scope){
+}
+
 function SidebarCtrl($scope, $http, socket, streams){
 
     $http.get('ang-config.json').success(function(data){
