@@ -4,6 +4,7 @@ var _ = require('underscore');
 var angularApp = express();
 angularServer = require('http').createServer(angularApp);
 var io = require('socket.io').listen(angularServer);
+io.set('log level', 1);
 angularApp.configure(function(){
 	angularApp.use(express.static(__dirname + '/public'));
 });
