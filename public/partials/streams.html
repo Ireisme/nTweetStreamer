@@ -68,6 +68,7 @@
         <p>Query: {{stream.query}}</p>
         <p>Tweets: {{stream.tweetCount}}</p>
         <p>Status: {{stream.status}}</p>
+        <button class="btn" ng-click="deleteStream(stream._id)">Delete</button>
       </div>
       </accordion-group>
     </accordion>

@@ -108,6 +108,11 @@ function StreamsCtrl($scope, $http, socket, streams) {
 		}
 	});
 
+	socket.on('stream-delete', function(_id)
+	{
+		$scope.streams = _.filter($scope.streams, function(stream) { return stream._id != _id; });
+	});
+
 	socket.on('stream-tweet', function(streamId)
 	{
 		var scopeStream =
@@ -147,7 +152,10 @@ function StreamsCtrl($scope, $http, socket, streams) {
 		$scope.addStreamModal = false;
 	};
 
-		streams.deleteStream(_id, onError);
+	$scope.deleteStream = function(_id){
+				streams.deleteStream(_id, onError);
+	};
+	
 	$scope.formatStreams = function(streams){
 
 		if(streams)

@@ -56,14 +56,17 @@ app.factory('streams', function($http){
         if(callback)
           callback(data);
       })
-      .error(onError(error));
+      .error(function(data, status, header){
+          onError(error);
+          console.log(data);
+        });
     },
-    deleteStream: function(id, callback, error){
+    deleteStream: function(id, error){
       $http.delete(uri + "/streams/" + id)
-      .success(function(data){
-        if(callback)
-          callback(data);
-      })
-      .error(onError(error));
+      .error(function(data, status, header){
+          onError(error);
+          console.log(data);
+        });
+    }
   };
 });
