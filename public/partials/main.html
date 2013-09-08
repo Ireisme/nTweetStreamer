@@ -1,6 +1,6 @@
 <div ng-controller="MainCtrl" class="container">
   <div class="row">
-    <alert ng-repeat="alert in alerts" type="alert.type">{{alert.msg}}</alert>
+    <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
     <div class="span 12">
       <h1 class="text-center">nTweetStreamer</h1>
     </div>

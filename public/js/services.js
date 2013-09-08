@@ -28,23 +28,42 @@ app.factory('socket', function ($rootScope) {
 app.factory('streams', function($http){
   var uri;
 
+  var onError = function(callback){
+    if(callback)
+      callback({type: "error", msg: "Unable to contact server. Confirm location is correct in 'ang-config.json'"});
+  }
+
   var promise = $http.get('ang-config.json').success(function(config){
       uri = "http://" + config.serverAddress;
   });
 
   return {
     promise: promise,
-    getStreams: function(callback){
-      $http.get(uri + "/streams").success(function(data){
+    getStreams: function(callback, error){
+      $http.get(uri + "/streams")
+      .success(function(data){
         if(callback)
           callback(data);
-      });
+      })
+      .error(function(data, status, header){
+          onError(error);
+          console.log(data);
+        });
     },
-    addStream: function(stream, callback){
-      $http.post(uri + "/streams", stream).success(function(data){
+    addStream: function(stream, callback, error){
+      $http.post(uri + "/streams", stream)
+      .success(function(data){
         if(callback)
           callback(data);
-      });
+      })
+      .error(onError(error));
     },
+    deleteStream: function(id, callback, error){
+      $http.delete(uri + "/streams/" + id)
+      .success(function(data){
+        if(callback)
+          callback(data);
+      })
+      .error(onError(error));
   };
 });

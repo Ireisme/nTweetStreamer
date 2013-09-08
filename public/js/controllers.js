@@ -2,6 +2,11 @@
 
 /* Controllers */
 function MainCtrl($scope){
+	$scope.alerts = [];
+
+	$scope.closeAlert = function(index) {
+    $scope.alerts.splice(index, 1);
+  };
 }
 
 function SidebarCtrl($scope, $http, socket, streams){
@@ -31,9 +36,14 @@ function SidebarCtrl($scope, $http, socket, streams){
 }
 
 function StreamsCtrl($scope, $http, socket, streams) {
+
+	var onError = function(error){
+		$scope.alerts.push(error);
+	}
+
 	streams.getStreams(function(data){
 		$scope.streams = $scope.formatStreams(data);
-	});
+	}, onError);
 
 	$scope.streamAction = function(stream){
 		if(stream.status === "Stopped")
@@ -128,7 +138,7 @@ function StreamsCtrl($scope, $http, socket, streams) {
 					$scope.addedStream.neLat
 				};
 
-		streams.addStream(stream);
+		streams.addStream(stream, null, onError);
 		$scope.addStreamModal = false;
 	};
 
@@ -137,6 +147,7 @@ function StreamsCtrl($scope, $http, socket, streams) {
 		$scope.addStreamModal = false;
 	};
 
+		streams.deleteStream(_id, onError);
 	$scope.formatStreams = function(streams){
 
 		if(streams)
