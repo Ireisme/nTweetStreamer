@@ -26,5 +26,7 @@ fs.readFile('./config/config.json', function(err, data){
   config = JSON.parse(data);
   
   angularServer.listen(config.angularPort);
+    console.log("Angular client running on " + config.angularPort);
   restApp.listen(config.serverPort);
+    console.log("RestServer running on " + config.serverPort);
 });
