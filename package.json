@@ -11,7 +11,7 @@
     "chai": "*",
     "mocha": "*",
     "proxyquire": "*",
-    "node-static": "*",
+    "node-static": "0.7.0",
     "socket.io": "0.9.16"
   }
 }
